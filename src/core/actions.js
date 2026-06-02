@@ -27,3 +27,23 @@ export function makeAutofill({ selector, value, page }) {
     done = true;
   };
 }
+
+// alert: inserta un bloque HTML una sola vez (dedup por id), antes/después de un ancla.
+export function makeAlert({ anchor, position = 'before', id, html, ensureStyles }) {
+  return function () {
+    if (id && document.getElementById(id)) return;
+    const anchorEl = document.querySelector(anchor);
+    if (!anchorEl || !anchorEl.parentNode) return;
+    if (typeof ensureStyles === 'function') ensureStyles();
+    const tpl = document.createElement('template');
+    tpl.innerHTML = String(html).trim();
+    const node = tpl.content.firstElementChild;
+    if (!node) return;
+    if (id && !node.id) node.id = id;
+    if (position === 'after') {
+      anchorEl.parentNode.insertBefore(node, anchorEl.nextSibling);
+    } else {
+      anchorEl.parentNode.insertBefore(node, anchorEl);
+    }
+  };
+}

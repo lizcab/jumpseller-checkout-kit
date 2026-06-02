@@ -1,6 +1,6 @@
 // test/actions.test.js
 import { describe, it, expect, beforeEach } from 'vitest';
-import { onPage, makeHide, makeAutofill } from '../src/core/actions.js';
+import { onPage, makeHide, makeAutofill, makeAlert } from '../src/core/actions.js';
 
 beforeEach(() => { document.body.innerHTML = ''; });
 
@@ -59,5 +59,40 @@ describe('makeAutofill', () => {
   it('no hace nada si el campo aún no existe', () => {
     const fill = makeAutofill({ selector: '#missing', value: 'x' });
     expect(() => fill()).not.toThrow();
+  });
+});
+
+describe('makeAlert', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '<div id="page"><button id="btn">OK</button></div>';
+  });
+
+  it('inserta antes del ancla y deduplica por id', () => {
+    const alert = makeAlert({ anchor: '#btn', position: 'before', id: 'a1', html: '<div class="blk">hola</div>' });
+    alert();
+    const node = document.getElementById('a1');
+    expect(node).not.toBeNull();
+    expect(node.nextElementSibling.id).toBe('btn'); // quedó antes del botón
+    alert(); // segundo apply no duplica
+    expect(document.querySelectorAll('.blk').length).toBe(1);
+  });
+
+  it('inserta después cuando position=after', () => {
+    const alert = makeAlert({ anchor: '#btn', position: 'after', id: 'a2', html: '<div>x</div>' });
+    alert();
+    expect(document.getElementById('btn').nextElementSibling.id).toBe('a2');
+  });
+
+  it('llama ensureStyles antes de insertar', () => {
+    let called = 0;
+    const alert = makeAlert({ anchor: '#btn', id: 'a3', html: '<div>x</div>', ensureStyles: () => { called++; } });
+    alert();
+    expect(called).toBe(1);
+  });
+
+  it('no hace nada si el ancla no existe', () => {
+    const alert = makeAlert({ anchor: '#nope', id: 'a4', html: '<div>x</div>' });
+    expect(() => alert()).not.toThrow();
+    expect(document.getElementById('a4')).toBeNull();
   });
 });
