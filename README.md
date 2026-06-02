@@ -5,6 +5,13 @@ código vía tags **Custom HTML** de Google Tag Manager. Permite, por campo:
 **ocultar**, **autocompletar**, **autocompletar-luego-ocultar** y agregar
 **alertas**.
 
+> ## 📖 ¿Eres no-técnico? Empieza por la **[Guía paso a paso para Tag Manager](docs/GUIA-TAG-MANAGER.md)**
+>
+> ⚠️ **Importante:** modificar el checkout es NO oficial y **puede costarte el
+> soporte de Jumpseller**. Además, **NO uses este repositorio de terceros en
+> producción**: haz tu propia copia (fork) y usa la tuya. La guía explica ambas
+> cosas.
+
 ## Cómo funciona
 Un único `MutationObserver` compartido reaplica acciones idempotentes en cada
 re-render de React. Se distribuye por jsDelivr; cada tienda solo declara su
