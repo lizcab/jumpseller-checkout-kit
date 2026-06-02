@@ -1,0 +1,15 @@
+<!-- Pegar como tag "Custom HTML" en GTM. Reemplazar <usuario> y el tag de versión. -->
+<script src="https://cdn.jsdelivr.net/gh/aatronco/jumpseller-checkout-kit@v1/dist/checkout-kit.min.js"></script>
+<script>
+  (function () {
+    if (!window.CheckoutKit) return;
+    CheckoutKit.run([
+      // --- acciones de ESTA tienda ---
+      { type: 'autofillThenHide', selector: '#checkout_city', value: 'Santiago' },
+      Object.assign(
+        { type: 'alert', anchor: '#save_place_order', position: 'before', id: 'policy_v1' },
+        CheckoutKit.presets.policyAlert({ link: 'https://sairam.cl/refund-policy' })
+      )
+    ]);
+  })();
+</script>
