@@ -14,3 +14,16 @@ export function makeHide({ selector, page }) {
     });
   };
 }
+
+// autofill: rellena el campo exactamente una vez (respeta ediciones posteriores).
+export function makeAutofill({ selector, value, page }) {
+  let done = false;
+  return function () {
+    if (done || !onPage(page)) return;
+    const el = document.querySelector(selector);
+    if (!el) return;
+    const v = typeof value === 'function' ? value() : value;
+    setNativeValue(el, v);
+    done = true;
+  };
+}
