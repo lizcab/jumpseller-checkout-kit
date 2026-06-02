@@ -1,0 +1,18 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]: Ciudad
+    - generic [ref=e4]: Empresa
+    - alert [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]: 
+        - text: Cambios hasta 30 días
+      - paragraph [ref=e9]:
+        - text: Válido para productos
+        - strong [ref=e10]: sellados, con celofán original y sin uso.
+      - link "Revisar derecho a retracto y políticas " [ref=e12] [cursor=pointer]:
+        - /url: https://sairam.cl/refund-policy
+        - text: Revisar derecho a retracto y políticas
+        - generic [ref=e13]: 
+    - button "Confirmar pedido" [ref=e14]
+  - separator [ref=e15]
+  - button "Simular re-render de React (quita y repone el form)" [ref=e16]

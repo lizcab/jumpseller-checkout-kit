@@ -231,9 +231,12 @@ minificación. Sin bundler pesado (YAGNI).
   ojo.
 - **Fuera de v1:** E2E contra el checkout real.
 
-## Input pendiente (para implementación)
+## Input pendiente (para implementación) — RESUELTO
 
-- **HTML / selectores reales del checkout v2 de Jumpseller.** Necesario para
-  poblar `docs/FIELD-CATALOG.md` con cada campo y su selector exacto. El usuario
-  lo entregará al iniciar la implementación. El diseño del motor no depende de
-  estos valores; solo el catálogo de recetas.
+- **HTML / selectores reales del checkout v2 de Jumpseller.** ✅ Entregado y
+  procesado: `docs/FIELD-CATALOG.md` ya contiene los selectores reales. Hallazgo
+  clave: **Región (`#region`) y Comuna (`#municipality`) son componentes
+  react-select**, no `<select>` nativos → se pueden ocultar pero NO autocompletar
+  con el kit. El resto son inputs nativos (`#email`, `#name`, `#surname`, `#city`,
+  `#address`, `#complement`, `#taxid`, `#phone`, textarea `#additional_information`)
+  donde hide/autofill/autofillThenHide funcionan.

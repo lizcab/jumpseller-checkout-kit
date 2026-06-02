@@ -1,45 +1,86 @@
 # Catálogo de campos del checkout — recetas
 
-Cada campo del checkout v2 de Jumpseller con su selector y el snippet listo para
-cada acción. Copia la entrada que necesites dentro del array de `CheckoutKit.run([...])`.
+Cada campo del checkout v2 de Jumpseller con su selector real y el snippet listo
+para cada acción. Copia la entrada que necesites dentro del array de
+`CheckoutKit.run([...])`.
 
-## Anclas confirmadas
+> Selectores verificados contra el DOM renderizado del checkout v2
+> (`/v2/checkout/vertical/`, layout de página única). El checkout monta todas las
+> secciones en el mismo DOM; usa el `id` de sección como `page` para scoping.
 
-| Elemento            | Selector             | Notas                                  |
-|---------------------|----------------------|----------------------------------------|
-| Paso de información | `#information-page`  | Úsalo como `page` para scoping         |
-| Botón confirmar     | `#save_place_order`  | Ancla típica para alertas (`before`)   |
+## Anclas / secciones (para scoping con `page`)
 
-## Acciones por campo
+| Sección                       | Selector            | Contenido                                  |
+|-------------------------------|---------------------|--------------------------------------------|
+| Información (contacto + envío) | `#information-page` | email, teléfono, nombre, dirección, ciudad |
+| Métodos de envío              | `#shipping-page`    | opciones de despacho                       |
+| Facturación                   | `#billing-page`     | RUT, "facturación = envío"                 |
+| Pago                          | `#payment-page`     | métodos de pago                            |
+| Botón confirmar               | `#save_place_order` | ancla típica para alertas (`before`)       |
 
-> Pendiente de completar con el HTML real del checkout. Formato de cada fila:
+## Campos — inputs nativos (hide / autofill / autofillThenHide funcionan)
 
-| Campo  | Selector            | Ocultar | Autocompletar | Autocompletar+Ocultar | Alerta |
-|--------|---------------------|---------|---------------|------------------------|--------|
-| Ciudad | `#checkout_city` *  | ✓       | ✓             | ✓                      | —      |
+| Campo                   | Selector                  | Tipo      | Hide | Autofill | Autofill+Hide |
+|-------------------------|---------------------------|-----------|:----:|:--------:|:-------------:|
+| E-mail                  | `#email`                  | input     | ✓    | ✓        | ✓             |
+| Teléfono                | `#phone`                  | input tel | ✓    | ✓        | ✓             |
+| Nombre                  | `#name`                   | input     | ✓    | ✓        | ✓             |
+| Apellidos               | `#surname`                | input     | ✓    | ✓        | ✓             |
+| Ciudad                  | `#city`                   | input     | ✓    | ✓        | ✓             |
+| Dirección               | `#address`                | input     | ✓    | ✓        | ✓             |
+| Depto/casa (complemento)| `#complement`             | input     | ✓    | ✓        | ✓             |
+| Instrucciones especiales| `#additional_information` | textarea  | ✓    | ✓        | ✓             |
+| RUT                     | `#taxid`                  | input     | ✓    | ✓        | ✓             |
 
-\* Selector tentativo — confirmar contra el HTML real.
+## Campos especiales — leer antes de usar
 
-### Snippets
+| Campo                | Selector                                      | Hide | Autofill | Nota |
+|----------------------|-----------------------------------------------|:----:|:--------:|------|
+| Región / Estado      | `#region` (input interno `#react-select-2-input`) | ✓ | ✗ | **react-select**, no `<select>` nativo |
+| Comuna               | `#municipality` (input interno `#react-select-3-input`) | ✓ | ✗ | **react-select**, no `<select>` nativo |
+| Prefijo país (tel)   | `#prefix` / botón `#rfs-btn`                   | ✓    | ✗        | dropdown de banderas (react) |
+| Método de entrega    | `#radio_delivery`, `#radio_store_pickup`, `#radio_point_pickup` | ✓ | — | radios |
+| Método de pago       | `#payment-page input.radioOp` (values `1297404` Stripe, `1420285` Webpay) | ✓ | — | radios |
+| Facturación = envío  | `#billing-page input[type="checkbox"]`        | ✓    | —        | checkbox sin id |
 
-**Ocultar un campo**
+> **⚠️ Región y Comuna NO se pueden autocompletar con `autofill`.** Son
+> componentes **react-select**: rellenar su input de texto interno NO selecciona
+> la opción (react-select ignora cambios externos al value). El `autofill`/
+> `autofillThenHide` del kit solo sirve para inputs/textarea/select nativos.
+> Para estos, lo viable es **ocultarlos** (`hide`), no autocompletarlos.
+
+## Snippets
+
+**Ocultar la fila completa de un campo (label + input)**
+
+Ocultar solo el input por su `id` deja huérfana la etiqueta flotante. Para ocultar
+toda la fila, apunta al wrapper con `:has()` (lo soporta el kit sin cambios):
+
 ```js
-{ type: 'hide', selector: '#checkout_company', page: '#information-page' }
+{ type: 'hide', selector: '.form-group:has(#city)', page: '#information-page' }
+// nombre/apellidos no están en .form-group, usa el wrapper más cercano:
+{ type: 'hide', selector: '.floating-label-wrap:has(#name)' }
 ```
 
-**Autocompletar (una vez; respeta edición del usuario)**
+**Autocompletar (una vez; respeta la edición del usuario)**
 ```js
-{ type: 'autofill', selector: '#checkout_city', value: 'Santiago' }
+{ type: 'autofill', selector: '#city', value: 'Santiago' }
 // value dinámico:
-{ type: 'autofill', selector: '#checkout_city', value: () => 'Santiago' }
+{ type: 'autofill', selector: '#city', value: () => 'Santiago' }
 ```
+> Si el campo ya trae un valor (el checkout a veces pre-rellena `#city`), el
+> `autofill` lo respeta y no lo pisa.
 
-**Autocompletar y luego ocultar**
+**Autocompletar y luego ocultar** (el caso "ciudad fija")
 ```js
-{ type: 'autofillThenHide', selector: '#checkout_city', value: 'Santiago' }
+// oculta solo el input:
+{ type: 'autofillThenHide', selector: '#city', value: 'Santiago' }
+// para ocultar también la etiqueta, combina autofill + hide del wrapper:
+{ type: 'autofill', selector: '#city', value: 'Santiago' },
+{ type: 'hide', selector: '.form-group:has(#city)' }
 ```
 
-**Alerta arriba del botón confirmar (con preset de política)**
+**Alerta arriba del botón confirmar (preset de política — caso Sairam)**
 ```js
 Object.assign(
   { type: 'alert', anchor: '#save_place_order', position: 'before', id: 'policy_v1' },
@@ -54,6 +95,7 @@ Object.assign(
 ```
 
 ## Cómo agregar un campo nuevo
-1. Inspecciona el checkout real y copia el selector estable del campo.
-2. Agrega una fila a la tabla con los ✓ de las acciones soportadas.
-3. Si necesitas un snippet especial, documéntalo bajo "Snippets".
+1. Inspecciona el checkout real y copia el `id` estable del campo (los inputs
+   nativos tienen `id` propio; los dropdowns son react-select — ver arriba).
+2. Agrega una fila a la tabla correspondiente (nativo vs especial).
+3. Si necesitas ocultar la fila completa, usa el patrón `wrapper:has(#id)`.

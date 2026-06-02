@@ -4,8 +4,8 @@
   (function () {
     if (!window.CheckoutKit) return;
     CheckoutKit.run([
-      // --- acciones de ESTA tienda ---
-      { type: 'autofillThenHide', selector: '#checkout_city', value: 'Santiago' },
+      // --- acciones de ESTA tienda (selectores reales del checkout v2) ---
+      { type: 'autofillThenHide', selector: '#city', value: 'Santiago' },
       Object.assign(
         { type: 'alert', anchor: '#save_place_order', position: 'before', id: 'policy_v1' },
         CheckoutKit.presets.policyAlert({ link: 'https://sairam.cl/refund-policy' })

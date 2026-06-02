@@ -15,8 +15,8 @@ config en GTM.
 <script src="https://cdn.jsdelivr.net/gh/aatronco/jumpseller-checkout-kit@v1/dist/checkout-kit.min.js"></script>
 <script>
   CheckoutKit.run([
-    { type: 'autofillThenHide', selector: '#checkout_city', value: 'Santiago' },
-    { type: 'hide', selector: '#checkout_company' }
+    { type: 'autofillThenHide', selector: '#city', value: 'Santiago' },
+    { type: 'hide', selector: '.form-group:has(#complement)' }
   ]);
 </script>
 ```
