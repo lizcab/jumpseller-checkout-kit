@@ -15,16 +15,18 @@ export function makeHide({ selector, page }) {
   };
 }
 
-// autofill: rellena el campo exactamente una vez (respeta ediciones posteriores).
+// autofill: rellena el campo si está vacío y no fue rellenado antes. Marca el
+// elemento (no un flag de cierre) para que un elemento remontado vacío vuelva a
+// rellenarse, pero respetando ediciones del usuario (incluido si lo deja vacío).
 export function makeAutofill({ selector, value, page }) {
-  let done = false;
   return function () {
-    if (done || !onPage(page)) return;
+    if (!onPage(page)) return;
     const el = document.querySelector(selector);
     if (!el) return;
+    if (el.dataset.ckAutofilled || el.value) return;
     const v = typeof value === 'function' ? value() : value;
     setNativeValue(el, v);
-    done = true;
+    el.dataset.ckAutofilled = '1';
   };
 }
 

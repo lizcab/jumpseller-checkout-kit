@@ -60,6 +60,17 @@ describe('makeAutofill', () => {
     const fill = makeAutofill({ selector: '#missing', value: 'x' });
     expect(() => fill()).not.toThrow();
   });
+
+  it('vuelve a rellenar si el elemento se remonta vacío (SPA multi-step)', () => {
+    document.body.innerHTML = '<input id="city" />';
+    const fill = makeAutofill({ selector: '#city', value: 'Santiago' });
+    fill();
+    expect(document.querySelector('#city').value).toBe('Santiago');
+    // React desmonta y remonta el campo vacío:
+    document.body.innerHTML = '<input id="city" />';
+    fill();
+    expect(document.querySelector('#city').value).toBe('Santiago');
+  });
 });
 
 describe('makeAlert', () => {

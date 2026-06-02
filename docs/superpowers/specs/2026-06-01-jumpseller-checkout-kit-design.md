@@ -99,8 +99,10 @@ re-ejecutar:
 - **`hide`** — re-oculta si React lo trae de vuelta. Stateless.
 - **`alert`** — dedup por `id`; si el nodo ya existe, no hace nada (como
   `BLOCK_ID` en Sairam).
-- **`autofill`** — rellena **una sola vez** por campo (marca interna `done`),
-  para no pisar lo que el usuario escriba después.
+- **`autofill`** — rellena si el campo está **vacío** y marca el **elemento** con
+  un data-attribute (`data-ck-autofilled`), de modo que un elemento remontado
+  vacío se vuelve a rellenar pero se respeta la edición del usuario, para no pisar
+  lo que el usuario escriba después.
 - **`autofillThenHide`** — secuencia: autofill (una vez) → hide (idempotente).
   El orden importa: el valor entra al estado de React antes de ocultar.
 
