@@ -47,3 +47,14 @@ export function makeAlert({ anchor, position = 'before', id, html, ensureStyles 
     }
   };
 }
+
+// autofillThenHide: rellena una vez y luego mantiene el campo oculto. El orden
+// importa: el valor entra al estado de React antes de ocultar.
+export function makeAutofillThenHide({ selector, value, page }) {
+  const fill = makeAutofill({ selector, value, page });
+  const hide = makeHide({ selector, page });
+  return function () {
+    fill();
+    hide();
+  };
+}

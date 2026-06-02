@@ -1,6 +1,6 @@
 // test/actions.test.js
 import { describe, it, expect, beforeEach } from 'vitest';
-import { onPage, makeHide, makeAutofill, makeAlert } from '../src/core/actions.js';
+import { onPage, makeHide, makeAutofill, makeAlert, makeAutofillThenHide } from '../src/core/actions.js';
 
 beforeEach(() => { document.body.innerHTML = ''; });
 
@@ -94,5 +94,19 @@ describe('makeAlert', () => {
     const alert = makeAlert({ anchor: '#nope', id: 'a4', html: '<div>x</div>' });
     expect(() => alert()).not.toThrow();
     expect(document.getElementById('a4')).toBeNull();
+  });
+});
+
+describe('makeAutofillThenHide', () => {
+  it('rellena una vez y deja el campo oculto', () => {
+    document.body.innerHTML = '<input id="city" />';
+    const action = makeAutofillThenHide({ selector: '#city', value: 'Santiago' });
+    action();
+    const el = document.querySelector('#city');
+    expect(el.value).toBe('Santiago');
+    expect(el.style.display).toBe('none');
+    action(); // idempotente
+    expect(el.value).toBe('Santiago');
+    expect(el.style.display).toBe('none');
   });
 });
