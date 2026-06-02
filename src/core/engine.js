@@ -31,7 +31,7 @@ export function createEngine(opts) {
   }
 
   function start() {
-    if (started) { apply(); return true; }
+    if (started) return true; // ya corre; register() aplica las acciones nuevas
     if (!skipGuards) {
       if (urlMatch && window.location.href.indexOf(urlMatch) === -1) return false;
       window[NAMESPACE] = window[NAMESPACE] || {};
@@ -53,6 +53,7 @@ export function createEngine(opts) {
     observer = null;
     clearTimeout(timer);
     started = false;
+    if (!skipGuards && window[NAMESPACE]) window[NAMESPACE].started = false;
   }
 
   return { register, apply, start, stop };

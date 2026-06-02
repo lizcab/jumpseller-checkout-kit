@@ -1,8 +1,9 @@
 // test/engine.test.js
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { createEngine } from '../src/core/engine.js';
 
 beforeEach(() => { document.body.innerHTML = ''; });
+afterEach(() => { delete window.__JS_CHECKOUT_KIT__; });
 
 describe('createEngine', () => {
   it('apply() ejecuta todas las acciones registradas', () => {
@@ -39,5 +40,24 @@ describe('createEngine', () => {
     await new Promise((r) => setTimeout(r, 30));
     expect(runs).toBeGreaterThanOrEqual(2);
     eng.stop();
+  });
+
+  it('register + start con el motor corriendo aplica la acción una sola vez (no doble apply)', () => {
+    const eng = createEngine({ skipGuards: true });
+    eng.start();
+    let runs = 0;
+    eng.register(() => { runs++; });  // started → apply una vez
+    eng.start();                       // started → noop, NO re-apply
+    expect(runs).toBe(1);
+    eng.stop();
+  });
+
+  it('una segunda instancia no monta otro observer (guard de namespace en window)', () => {
+    delete window.__JS_CHECKOUT_KIT__;
+    const a = createEngine();          // guards activos; la URL de jsdom contiene v2/checkout
+    expect(a.start()).toBe(true);
+    const b = createEngine();
+    expect(b.start()).toBe(false);     // bloqueada por el namespace
+    a.stop();                          // limpia el flag de namespace
   });
 });
