@@ -4,9 +4,11 @@ Cada campo del checkout v2 de Jumpseller con su selector real y el snippet listo
 para cada acción. Copia la entrada que necesites dentro del array de
 `CheckoutKit.run([...])`.
 
-> Selectores verificados contra el DOM renderizado del checkout v2
-> (`/v2/checkout/vertical/`, layout de página única). El checkout monta todas las
-> secciones en el mismo DOM; usa el `id` de sección como `page` para scoping.
+> **⚠️ Requisito:** selectores verificados contra el checkout **vertical de una
+> sola página** (`/v2/checkout/vertical/`), que monta TODAS las secciones en el
+> mismo DOM a la vez. En el checkout **por pasos (multipágina)** los campos
+> aparecen/desaparecen al navegar y estos selectores y comportamientos **pueden
+> no coincidir**. Usa el `id` de sección como `page` para scoping.
 
 ## Anclas / secciones (para scoping con `page`)
 

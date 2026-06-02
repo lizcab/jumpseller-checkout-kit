@@ -11,6 +11,9 @@ código vía tags **Custom HTML** de Google Tag Manager. Permite, por campo:
 > soporte de Jumpseller**. Además, **NO uses este repositorio de terceros en
 > producción**: haz tu propia copia (fork) y usa la tuya. La guía explica ambas
 > cosas.
+>
+> 📋 **Requisito:** funciona con el checkout **vertical de una sola página**. En
+> el checkout por pasos (multipágina) los selectores pueden no coincidir.
 
 ## Cómo funciona
 Un único `MutationObserver` compartido reaplica acciones idempotentes en cada

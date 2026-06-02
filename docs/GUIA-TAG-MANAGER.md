@@ -44,6 +44,31 @@ saltarte pasos.
 
 ---
 
+---
+
+> # 📋 REQUISITO PREVIO: tu checkout debe ser el VERTICAL de una sola página
+>
+> Este kit está hecho y verificado para el checkout **vertical de una página**:
+> ese donde **todo el formulario (contacto, envío, facturación y pago) se ve en
+> una sola pantalla**, hacia abajo.
+>
+> **Si tu tienda usa el checkout por PASOS (multipágina)** — donde avanzas con
+> botones "Siguiente" entre pantallas separadas — **los campos y el
+> comportamiento pueden no coincidir** y el kit puede no funcionar (o funcionar a
+> medias).
+>
+> ### ¿Cómo sé cuál tengo?
+> Abre tu checkout (agrega un producto y ve a pagar):
+> - **Vertical (✅ compatible):** ves contacto, dirección, envío y pago todo en
+>   la misma página, desplazándote hacia abajo.
+> - **Por pasos (⚠️ no garantizado):** completas una pantalla y pulsas
+>   "Siguiente" para pasar a la próxima.
+>
+> Puedes cambiar el tipo de checkout en el admin de Jumpseller (preferencias del
+> checkout). **Si no estás en el vertical de una página, no sigas con esta guía.**
+
+---
+
 ## Paso 1 — Haz tu propia copia del kit (fork)
 
 1. Crea una cuenta gratis en GitHub si no tienes: https://github.com/signup
