@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Mock checkout — Checkout Kit</title>
+</head>
+<body>
+  <!-- Simula el paso de información del checkout v2 -->
+  <div id="information-page">
+    <label>Ciudad <input id="checkout_city" /></label><br />
+    <label>Empresa <input id="checkout_company" /></label><br />
+    <button id="save_place_order">Confirmar pedido</button>
+  </div>
+
+  <hr />
+  <button id="rerender">Simular re-render de React (quita y repone el form)</button>
+
+  <!-- En producción esto sería el bundle del CDN; aquí cargamos el build local -->
+  <script src="../dist/checkout-kit.js"></script>
+  <script>
+    // Engaña el guard de URL para poder probar en local.
+    history.replaceState(null, '', location.pathname + '?p=/v2/checkout');
+
+    CheckoutKit.run([
+      { type: 'autofillThenHide', selector: '#checkout_city', value: 'Santiago' },
+      { type: 'hide', selector: '#checkout_company', page: '#information-page' },
+      Object.assign(
+        { type: 'alert', anchor: '#save_place_order', position: 'before', id: 'policy_v1' },
+        CheckoutKit.presets.policyAlert({ link: 'https://sairam.cl/refund-policy' })
+      )
+    ]);
+
+    // Botón para verificar idempotencia: tras re-render, el observer reaplica todo.
+    document.getElementById('rerender').addEventListener('click', function () {
+      const page = document.getElementById('information-page');
+      const clone = page.cloneNode(true);
+      page.replaceWith(clone);
+    });
+  </script>
+</body>
+</html>
